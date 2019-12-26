@@ -9,7 +9,6 @@ import os
 import discord
 import requests
 import urllib.request
-import re
 import json
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
@@ -34,7 +33,7 @@ def startSession():
         'nonce': nonce
     }
 
-    loggedin = s.post('https://intranett.npst.no/login', data=data)
+    s.post('https://intranett.npst.no/login', data=data)
 
 #chall id by name
 def getID(challname): 

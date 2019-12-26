@@ -36,7 +36,6 @@ def startSession():
 
     loggedin = s.post('https://intranett.npst.no/login', data=data)
 
-
 #chall id by name
 def getID(challname): 
     r = s.get(url='https://intranett.npst.no/api/v1/challenges')
@@ -50,7 +49,7 @@ def getID(challname):
 
 #scoreboard to specific chall
 def getChallScore(id):
-    r = s.get(url='https://intranett.npst.no/api/v1/challenges/' + str(id) + '/solves')
+    r = s.get(url='https://intranett.npst.no/api/v1/challenges/{0}/solves'.format(id))
     parsed = json.loads(r.text[23:-2])
     names = []
     for x, item in enumerate(parsed):
@@ -78,8 +77,7 @@ async def on_message(message):
 
     #cryptobin
     if message.channel.id == 656583866600914953:
-        cryptobin = re.search('cryptobin.co', message.content)
-        if not cryptobin:
+        if message.content.find('cryptobin.co') != -1:
             await message.delete()
             await message.channel.send('Meldingen din ble slettet fra <#656583866600914953> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>', delete_after=5)
 
@@ -103,36 +101,36 @@ async def on_message(message):
         if pname == ' ' or pname == '': 
             soup = getScoreBoard()
             scoreboard = []
-            i = 0
-            for tag in soup.findAll('td'):
-                if i < 23 and i > 2:
+            for x, tag in enumerate(soup.findAll('td')):
+                if x < 23 and x > 2:
                     scoreboard.append(tag.text)
-                if i > 23:
+                if x > 23:
                     break
-                i += 1
             embed = discord.Embed(description="Scoreboard", color=0x50bdfe)
-            for x in range(0, 10):
+            for x in range(10):
                 embed.add_field(name='#' + str(x+1) + ' (' + scoreboard[x*2+1] + 'p)', value=scoreboard[x*2], inline=True)
             embed.set_footer(text="Etterspurt av: " + message.author.name)
             await message.channel.send(embed=embed)
         else:
-            myRegex = r'\t' + re.escape(pname.lower()) + r'\n'
             soup = getScoreBoard()
             nextOne = False
             score = ''
             for tag in soup.findAll('td'):
-                name = re.search(myRegex, tag.text.lower())
+                name = tag.text.lower().find('\t{0}\n'.format(pname.lower()))
                 if nextOne:
                     score = tag.text
                     nextOne = False
                     break
-                if name:
+                if name != -1:
                     pname = tag.text
                     nextOne = True
-            embed = discord.Embed(description="Points", color=0x50bdfe)
-            embed.add_field(name=pname, value=score, inline=True)
-            embed.set_footer(text="Etterspurt av: " + message.author.name)
-            await message.channel.send(embed=embed)
+            if score != '':
+                embed = discord.Embed(description="Points", color=0x50bdfe)
+                embed.add_field(name=pname, value=score, inline=True)
+                embed.set_footer(text="Etterspurt av: " + message.author.name)
+                await message.channel.send(embed=embed)
+            else:
+                await message.channel.send('No user with this name')
 
 @client.event
 async def on_ready():

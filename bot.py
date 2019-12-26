@@ -20,8 +20,8 @@ token = os.getenv('DISCORD_TOKEN')
 npstPass = os.getenv('NPST_PASS')
 
 client = discord.Client()
-
 s = requests.Session()
+
 #start session
 def startSession():
     req = s.get('https://intranett.npst.no/login')
@@ -66,6 +66,8 @@ def getScoreBoard():
 
 @client.event
 async def on_message(message):
+    msg = message.content
+    
     #no bot messages
     if message.author == client.user:
         return
@@ -76,27 +78,31 @@ async def on_message(message):
 
     #cryptobin
     if message.channel.id == 656583866600914953:
-        if message.content.find('cryptobin.co') != -1:
+        if msg.find('cryptobin.co') != -1:
             await message.delete()
             await message.channel.send('Meldingen din ble slettet fra <#656583866600914953> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>', delete_after=5)
 
+    #prefix
+    if not msg.startswith(prefix):
+        return
+
     #challenge scores
-    if message.content.startswith(prefix + 'chall '):
-        cname = message.content[7:]
+    if msg[1:].startswith('chall '):
+        cname = msg[7:]
         names = []
         if getID(cname) != 0:
             names = getChallScore(getID(cname))
             embed = discord.Embed(description=cname, color=0x50bdfe)
             for x in range (len(names)):
                 embed.add_field(name='#' + str(x+1), value=names[x], inline=True)
-            embed.set_footer(text="Etterspurt av: " + message.author.name)
+            embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
             await message.channel.send(embed=embed)
         else:
             await message.channel.send('Ingen challenge med dette navnet!')
         
     #scoreboard
-    if message.content.startswith(prefix + 'score'):
-        pname = message.content[7:]
+    if msg[1:].startswith('score'):
+        pname = msg[7:]
         if pname == ' ' or pname == '': 
             soup = getScoreBoard()
             scoreboard = []
@@ -108,7 +114,7 @@ async def on_message(message):
             embed = discord.Embed(description="Scoreboard", color=0x50bdfe)
             for x in range(10):
                 embed.add_field(name='#' + str(x+1) + ' (' + scoreboard[x*2+1] + 'p)', value=scoreboard[x*2], inline=True)
-            embed.set_footer(text="Etterspurt av: " + message.author.name)
+            embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
             await message.channel.send(embed=embed)
         else:
             soup = getScoreBoard()
@@ -126,7 +132,7 @@ async def on_message(message):
             if score != '':
                 embed = discord.Embed(description="Points", color=0x50bdfe)
                 embed.add_field(name=pname, value=score, inline=True)
-                embed.set_footer(text="Etterspurt av: " + message.author.name)
+                embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
                 await message.channel.send(embed=embed)
             else:
                 await message.channel.send('No user with this name')

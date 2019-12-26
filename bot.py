@@ -26,7 +26,7 @@ s = requests.Session()
 def startSession():
     req = s.get('https://intranett.npst.no/login')
     soup = BeautifulSoup(req.text, 'html.parser')
-    nonce = soup.findAll("input", {"name": "nonce"})[0]['value']
+    nonce = soup.findAll('input', {'name': 'nonce'})[0]['value']
     data = {
         'password': npstPass,
         'name': 'Alvebetjent BOT',
@@ -86,16 +86,23 @@ async def on_message(message):
     if not msg.startswith(prefix):
         return
 
+    #help
+    if msg[1:].startswith('help'):
+        embed = discord.Embed(description='Hjelp', color=0x50bdfe)
+        embed.add_field(name='{0}chall <oppgavenavn>'.format(prefix), value='Printer ut de 10 første som løste en oppgave', inline=False)
+        embed.add_field(name='{0}score [brukernavn]'.format(prefix), value='Printer ut enten topp 10 eller scoren til en bruker', inline=False)
+        embed.set_footer(text='Etterspurt av: {0.author.name}'.format(message))
+        await message.channel.send(embed=embed)
+
     #challenge scores
     if msg[1:].startswith('chall '):
         cname = msg[7:]
-        names = []
         if getID(cname) != 0:
             names = getChallScore(getID(cname))
             embed = discord.Embed(description=cname, color=0x50bdfe)
             for x in range (len(names)):
-                embed.add_field(name='#' + str(x+1), value=names[x], inline=True)
-            embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
+                embed.add_field(name='#{0}'.format(str(x+1)), value=names[x], inline=True)
+            embed.set_footer(text='Etterspurt av: {0.author.name}'.format(message))
             await message.channel.send(embed=embed)
         else:
             await message.channel.send('Ingen challenge med dette navnet!')
@@ -111,10 +118,10 @@ async def on_message(message):
                     scoreboard.append(tag.text)
                 if x > 23:
                     break
-            embed = discord.Embed(description="Scoreboard", color=0x50bdfe)
+            embed = discord.Embed(description='Scoreboard', color=0x50bdfe)
             for x in range(10):
-                embed.add_field(name='#' + str(x+1) + ' (' + scoreboard[x*2+1] + 'p)', value=scoreboard[x*2], inline=True)
-            embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
+                embed.add_field(name='#{0} ({1}p)'.format(str(x+1), scoreboard[x*2+1]), value=scoreboard[x*2], inline=True)
+            embed.set_footer(text='Etterspurt av: {0.author.name}'.format(message))
             await message.channel.send(embed=embed)
         else:
             soup = getScoreBoard()
@@ -130,12 +137,12 @@ async def on_message(message):
                     pname = tag.text
                     nextOne = True
             if score != '':
-                embed = discord.Embed(description="Points", color=0x50bdfe)
+                embed = discord.Embed(description='Points', color=0x50bdfe)
                 embed.add_field(name=pname, value=score, inline=True)
-                embed.set_footer(text="Etterspurt av: {0.author.name}".format(message))
+                embed.set_footer(text='Etterspurt av: {0.author.name}'.format(message))
                 await message.channel.send(embed=embed)
             else:
-                await message.channel.send('No user with this name')
+                await message.channel.send('Ingen bruker med dette navnet!')
 
 @client.event
 async def on_ready():

@@ -1,17 +1,16 @@
 '''
-Første ordentelig Python prosjekt :)
-Discord bot som henter statistikk for (N)PST sin CTF
-Kontakt andreas#8860 på Discord hvis du har spørsmål
+First real Python project :)
+Discord bot that provides statistics for the (N)PST Christmas CTF 2019
+Contact andreas#8860 if you have any questions
+Use however you wish
 '''
 
 import os
 import discord
-from discord.ext import commands
 import requests
 import urllib.request
 import re
 import json
-from hashlib import sha256
 from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 
@@ -38,7 +37,7 @@ def startSession():
     loggedin = s.post('https://intranett.npst.no/login', data=data)
 
 
-#chall id fra navn
+#chall id by name
 def getID(challname): 
     r = s.get(url='https://intranett.npst.no/api/v1/challenges')
     parsed = json.loads(r.text[23:-2])
@@ -49,8 +48,8 @@ def getID(challname):
             break
     return 0
 
-#scoreboard til spesifikk chall
-def getScore(id):
+#scoreboard to specific chall
+def getChallScore(id):
     r = s.get(url='https://intranett.npst.no/api/v1/challenges/' + str(id) + '/solves')
     parsed = json.loads(r.text[23:-2])
     names = []
@@ -89,7 +88,7 @@ async def on_message(message):
         cname = message.content[7:]
         names = []
         if getID(cname) != 0:
-            names = getScore(getID(cname))
+            names = getChallScore(getID(cname))
             embed = discord.Embed(description=cname, color=0x50bdfe)
             for x in range (len(names)):
                 embed.add_field(name='#' + str(x+1), value=names[x], inline=True)

@@ -144,6 +144,13 @@ async def on_message(message):
                 await message.channel.send('Ingen bruker med dette navnet!')
 
 @client.event
+async def on_message_edit(before, after):
+    if after.channel.id == 656583866600914953:
+        if after.content.find('cryptobin.co') == -1:
+            await after.delete()
+            await after.channel.send('Meldingen din ble slettet fra <#656583866600914953> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>', delete_after=5)
+
+@client.event
 async def on_ready():
     print('Logget på som {0.user}'.format(client))
 

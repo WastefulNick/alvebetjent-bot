@@ -39,7 +39,6 @@ def startSession():
 def getID(challname): 
     r = s.get(url='https://intranett.npst.no/api/v1/challenges')
     parsed = json.loads(r.text[23:-2])
-
     for item in parsed:
         if item['name'].lower() == challname.lower():
             return item['id']
@@ -78,7 +77,7 @@ async def on_message(message):
 
     #cryptobin
     if message.channel.id == 656583866600914953:
-        if msg.find('cryptobin.co') != -1:
+        if msg.find('cryptobin.co') == -1:
             await message.delete()
             await message.channel.send('Meldingen din ble slettet fra <#656583866600914953> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>', delete_after=5)
 

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import requests
-from api import API
+from utils import Utils
 import os
 import sys
 
@@ -11,7 +11,7 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
     
     @commands.command()
     async def score(self, ctx, *args):
-        score = API().getScoreBoard()
+        score = Utils().getScoreBoard()
         if not score:
             await ctx.send('En feil har oppstått...')
             return
@@ -22,7 +22,7 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
 
             for x in range(10):
                 user = score[x]
-                embed_string += f'#{x+1} {user["display_name"]} - {int(user["challenges_solved"]) * 10} poeng\n'
+                embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
 
             embed.description = embed_string
             embed.set_footer(text=f'Etterspurt av: {ctx.message.author.name}#{ctx.message.author.discriminator}')
@@ -38,7 +38,7 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
                 for arg in args:
                     if arg.lower() in user['display_name'].lower():
                         found = True
-                        embed_string += f'#{x+1} {user["display_name"]} - {int(user["challenges_solved"]) * 10} poeng\n'
+                        embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
 
             if found:
                 embed.description = embed_string

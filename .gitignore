@@ -1,3 +1,2 @@
 .env
-testing.py
-icon.png
+__pycache__/

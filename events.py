@@ -27,7 +27,7 @@ class EventsCog(commands.Cog, name="Events"):
         if after.channel.name == 'cryptobins':
             if msg.find('cryptobin.co') == -1:
                 await after.delete()
-                await after.channel.send(f'Meldingen din ble slettet fra <#{message.channel.id}> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>.', delete_after=5)            
+                await after.channel.send(f'Meldingen din ble slettet fra <#{after.channel.id}> fordi den ikke inneholdt en cryptobin link. Du kan diskutere løsningene i <#652630061584875532>.', delete_after=5)            
 
 def setup(bot):
     bot.add_cog(EventsCog(bot))

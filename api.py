@@ -3,7 +3,7 @@ import json
 
 class API():
     def getScoreBoard(self):
-        r = requests.get('https://dass.npst.no/.netlify/functions/scoreboard');
+        r = requests.get('https://dass.npst.no/.netlify/functions/scoreboard')
         try:
             results = json.loads(r.text)['result']
             return results

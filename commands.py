@@ -35,9 +35,10 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
             for x in range(len(score)):
                 user = score[x]
 
-                if user['display_name'].lower() in [x.lower() for x in args]:
-                    found = True
-                    embed_string += f'#{x+1} {user["display_name"]} - {int(user["challenges_solved"]) * 10} poeng\n'
+                for arg in args:
+                    if arg.lower() in user['display_name'].lower():
+                        found = True
+                        embed_string += f'#{x+1} {user["display_name"]} - {int(user["challenges_solved"]) * 10} poeng\n'
 
             if found:
                 embed.description = embed_string

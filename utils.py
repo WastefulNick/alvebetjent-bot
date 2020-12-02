@@ -11,7 +11,7 @@ class Utils():
             return None
     
     def formatDisplayName(self, display_name):
-        illegal = ['👉', '👑']
+        illegal = ['👉', '👑', ':crown:', ':point_right:']
         formatted = display_name[:20]
         if len(display_name) > 20:
             formatted += '...'

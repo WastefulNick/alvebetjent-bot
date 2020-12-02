@@ -20,7 +20,7 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
             embed = discord.Embed(title='Poengoversikt', color=0x50bdfe)
             embed_string = ''
 
-            for x in range(10):
+            for x in range(15):
                 user = score[x]
                 embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
 
@@ -28,19 +28,11 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
             embed.set_footer(text=f'Etterspurt av: {ctx.message.author.name}#{ctx.message.author.discriminator}')
             await ctx.send(embed=embed)
         else: # If user(s) inputted => send score for specific user(s)
-            found = False
             embed = discord.Embed(title='Poengoversikt', color=0x50bdfe)
-            embed_string = ''
 
-            for x in range(len(score)):
-                user = score[x]
+            embed_string = Utils().getScoreUsersByName(score, args)
 
-                for arg in args:
-                    if arg.lower() in user['display_name'].lower():
-                        found = True
-                        embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
-
-            if found:
+            if embed_string:
                 embed.description = embed_string
                 embed.set_footer(text=f'Etterspurt av: {ctx.message.author.name}#{ctx.message.author.discriminator}')
                 await ctx.send(embed=embed)

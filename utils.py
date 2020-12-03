@@ -30,7 +30,10 @@ class Utils():
             for arg in input_users:
                 if arg.lower() in user['display_name'].lower():
                     user_count += 1
-                    embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
+                    if user["eggs_solved"] == 0:
+                        embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
+                    else:
+                        embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng og ⭐ x {user["eggs_solved"]}\n'
                     if user_count >= 15:
                         embed_string += '...'
                         return embed_string

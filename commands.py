@@ -22,7 +22,10 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
 
             for x in range(15):
                 user = score[x]
-                embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
+                if user["eggs_solved"] == "0":
+                    embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
+                else:
+                    embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng og ⭐ x {user["eggs_solved"]}\n'
 
             embed.description = embed_string
             embed.set_footer(text=f'Etterspurt av: {ctx.message.author.name}#{ctx.message.author.discriminator}')

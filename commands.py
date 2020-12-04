@@ -5,7 +5,7 @@ from utils import Utils
 import os
 import sys
 
-class CommandsCog(commands.Cog, name="Score Kommandoer"):
+class CommandsCog(commands.Cog, name="Kommandoer"):
     def __init__(self, bot):
         self.bot = bot
     
@@ -27,19 +27,18 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
                     embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng\n'
                 else:
                     embed_string += f'#{x+1} {Utils().formatDisplayName(user["display_name"])} - {int(user["challenges_solved"]) * 10} poeng og ⭐ x {user["eggs_solved"]}\n'
-                    
-            highest_score = int(score[0]["challenges_solved"]) + int(score[0]["eggs_solved"])
+            
+            highest_score = [score[0]["challenges_solved"], score[0]["eggs_solved"]]
             high_score_count = 0
 
             for x in range(len(score)):
                 user = score[x]
-                user_score = int(user["challenges_solved"]) + int(user["eggs_solved"])
-                if user_score == highest_score:
-                    high_score_count += 1
-                else:
+                user_score = [user["challenges_solved"], user["eggs_solved"]]
+                if user_score != highest_score:
+                    high_score_count = x
                     break
 
-            embed.description = f'{embed_string }\n{high_score_count} flittige arbeidere har maks poeng'
+            embed.description = f'{embed_string }\n{high_score_count} alvebetjenter har maks poeng'
             embed.set_footer(text=f'Etterspurt av: {ctx.message.author.name}#{ctx.message.author.discriminator}')
             await ctx.send(embed=embed)
         else: # If user(s) inputted => send score for specific user(s)
@@ -53,6 +52,17 @@ class CommandsCog(commands.Cog, name="Score Kommandoer"):
                 await ctx.send(embed=embed)
             else:
                 await ctx.send('Ingen bruker med dette navnet!')
+    
+    @commands.command(aliases=['print', 'retrieve'])
+    async def hent(self, ctx, *arg):
+        if not arg:
+            await ctx.send('Mangler argument. Vennligst skriv inn hva du vil hente (f. eks. Alle Flagg) i denne formaten: `!hent <arg>`')
+            return
+        embed = discord.Embed(
+            title='ERROR',
+            description=f'discord.ext.commands.errors.CommandInvokeError: Command raised an exception: AttributeError: "Utils" object has no attribute "retrieve{"".join(arg)}"\n\nFor mer info om bruken vennligst [KLIKK HER](https://www.youtube.com/watch?v=dQw4w9WgXcQ)'
+        )
+        await ctx.send(embed=embed)
 
     @commands.command()
     @commands.is_owner()

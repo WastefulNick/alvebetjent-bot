@@ -10,7 +10,7 @@ token = os.getenv('DISCORD_TOKEN')
 prefix = '!'
 
 bot = commands.Bot(command_prefix=prefix, description='Bot som gir info om NPST CTF 2020')
-bot.remove_command('help')
+#bot.remove_command('help')
 
 extensions = ['commands', 'events']
 
